@@ -1,0 +1,12 @@
+# Compiled source #
+###################
+*.dll
+*.exe
+*.pdb
+
+# Visual Studio files & folders #
+#################################
+*.suo
+.vs/
+obj/
+bin/
