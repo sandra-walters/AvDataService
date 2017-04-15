@@ -33,8 +33,8 @@ namespace AvConsole
 
             _apiKey = config["ApiKey"];
             _symbol = config["Symbol"];
-            _interval = config["Symbol"];
-            _seriesType = config["Symbol"];
+            _interval = config["Interval"];
+            _seriesType = config["SeriesType"];
             Int32.TryParse(config["TimePeriod"], out _timePeriod);
         }
 
@@ -42,19 +42,26 @@ namespace AvConsole
         {
             TimeSeries tss = new TimeSeries(_apiKey);
 
-            AvResponse response = tss.Intraday(_symbol, IntradayInterval.Interval_15Min);
-            ReportResponse("TimeSeries.Intraday", response);
+            try
+            {
+                var response = tss.Intraday(_symbol, IntradayInterval.Interval_15Min);
+                ReportResponse("TimeSeries.Intraday", response);
 
-            response = tss.Daily(_symbol);
-            ReportResponse("TimeSeries.Daily", response);
+                response = tss.Daily(_symbol);
+                ReportResponse("TimeSeries.Daily", response);
 
-            response = tss.Weekly(_symbol);
-            ReportResponse("TimeSeries.Weekly", response);
+                response = tss.Weekly(_symbol);
+                ReportResponse("TimeSeries.Weekly", response);
 
-            response = tss.Monthly(_symbol);
-            ReportResponse("TimeSeries.Monthly", response);
-
+                response = tss.Monthly(_symbol);
+                ReportResponse("TimeSeries.Monthly", response);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
+
         static void DemoTechnicalIndicators()
         { 
             TechnicalIndicator ti = new TechnicalIndicator(_apiKey);
@@ -222,6 +229,14 @@ namespace AvConsole
 
             AvResponse response = sp.Get();
             ReportResponse("SectorPerformance.Get", response);
+        }
+
+        private static void ReportResponse(string callName, TimeSeriesData response)
+        {
+            Console.WriteLine($"Method: {callName}");
+            Console.WriteLine(response);
+            Console.WriteLine("Press a key to continue...");
+            Console.ReadKey();
         }
 
         private static void ReportResponse(string callName, AvResponse response)
